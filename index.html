@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WNJ Studio — Premium Digital Wedding Invitation</title>
+<meta name="description" content="WNJ Studio — Undangan Pernikahan Digital Premium. Elegan, Interaktif & Tak Terlupakan.">
+<meta property="og:title" content="WNJ Studio — Premium Digital Wedding Invitation">
+<meta property="og:description" content="Undangan pernikahan digital premium yang elegan, interaktif & tak terlupakan.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@300;400;500&family=Cinzel+Decorative:wght@400&family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#030507;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --gold-pale:#f5e4b0;
+  --cream:#f8f2e8;
+}
+html,body{width:100%;min-height:100vh}
+body{background:var(--black);color:var(--cream);font-family:'Cormorant Garamond',serif;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;position:relative}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5}
+
+/* BG CANVAS */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* CONTENT */
+.wrap{position:relative;z-index:2;width:100%;max-width:700px;padding:60px 24px;display:flex;flex-direction:column;align-items:center;gap:0;text-align:center}
+
+/* LOGO */
+.logo-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:32px;animation:fadeUp 1s ease .1s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.logo-main{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,6vw,38px);letter-spacing:0.15em;color:transparent;background:linear-gradient(160deg,#f5e4b0 0%,#e8c97a 25%,#c9a84c 55%,#e8c97a 80%,#9a7530 100%);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 4px 20px rgba(201,168,76,0.2))}
+.logo-sub{font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.65em;color:rgba(201,168,76,0.38);text-transform:uppercase}
+
+/* DIVIDER */
+.div-orn{display:flex;align-items:center;gap:14px;width:200px;margin:20px auto}
+.do-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35),transparent)}
+.do-d{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);opacity:0.6;flex-shrink:0}
+
+/* TAGLINE */
+.tagline{font-family:'Great Vibes',cursive;font-size:clamp(28px,8vw,48px);color:transparent;background:linear-gradient(160deg,#f5e4b0,#c9a84c);-webkit-background-clip:text;background-clip:text;line-height:1;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.2));animation:fadeUp 1s ease .3s both;margin-bottom:8px}
+.tagline-sub{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:rgba(245,228,176,0.38);letter-spacing:0.1em;animation:fadeUp 1s ease .4s both;margin-bottom:40px}
+
+/* MENU GRID */
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;animation:fadeUp 1s ease .5s both}
+
+.menu-card{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:26px 22px;border:1px solid rgba(201,168,76,0.12);background:linear-gradient(160deg,rgba(201,168,76,0.04) 0%,rgba(201,168,76,0.01) 100%);text-decoration:none;transition:all .4s;cursor:pointer;position:relative;overflow:hidden;text-align:left}
+.menu-card:hover{border-color:rgba(201,168,76,0.35);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,0.4)}
+.menu-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),transparent);opacity:0;transition:opacity .4s}
+.menu-card:hover::before{opacity:1}
+.menu-card.featured{border-color:rgba(201,168,76,0.28);background:linear-gradient(160deg,rgba(201,168,76,0.07) 0%,rgba(201,168,76,0.02) 100%)}
+.menu-card.featured::before{opacity:1}
+
+.menu-card.full-width{grid-column:1/-1}
+
+.card-icon{font-size:28px;margin-bottom:2px}
+.card-badge{position:absolute;top:14px;right:14px;padding:3px 10px;border:1px solid rgba(201,168,76,0.28);background:rgba(201,168,76,0.1);font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.18em;color:var(--gold);text-transform:uppercase}
+.card-title{font-family:'Cinzel',serif;font-size:12px;font-weight:400;letter-spacing:0.22em;color:var(--gold-light);text-transform:uppercase;line-height:1.3}
+.card-desc{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(245,228,176,0.4);line-height:1.65}
+.card-arrow{position:absolute;bottom:18px;right:18px;color:rgba(201,168,76,0.35);font-size:14px;transition:all .4s}
+.menu-card:hover .card-arrow{color:var(--gold);transform:translateX(3px)}
+
+/* SHINE */
+.menu-card .shine{position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.03),transparent);transform:skewX(-18deg);transition:left .7s ease;pointer-events:none}
+.menu-card:hover .shine{left:150%}
+
+/* SEPARATOR */
+.sep{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.09),transparent);margin:32px 0}
+
+/* CONTACT ROW */
+.contact-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;animation:fadeUp 1s ease .7s both}
+.contact-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid rgba(201,168,76,0.15);background:transparent;color:rgba(245,228,176,0.38);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all .35s;text-decoration:none}
+.contact-btn:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.contact-btn.wa{border-color:rgba(37,211,102,0.2);color:rgba(100,220,130,0.45)}
+.contact-btn.wa:hover{border-color:rgba(37,211,102,0.5);color:rgba(100,220,130,0.8);background:rgba(37,211,102,0.05)}
+
+/* FOOTER */
+.footer-txt{font-family:'Raleway',sans-serif;font-size:8px;font-weight:200;letter-spacing:0.35em;color:rgba(245,228,176,0.15);text-transform:uppercase;margin-top:36px;animation:fadeUp 1s ease .8s both}
+
+/* RINGS */
+.ring{position:fixed;left:50%;top:50%;border:1px solid rgba(201,168,76,0.04);border-radius:50%;animation:ringOut var(--d,9s) ease-out var(--del,0s) infinite;pointer-events:none;z-index:1}
+@keyframes ringOut{0%{width:80px;height:80px;opacity:.6;transform:translate(-50%,-50%)}100%{width:1200px;height:1200px;opacity:0;transform:translate(-50%,-50%)}}
+
+@media(max-width:480px){
+  .menu-grid{grid-template-columns:1fr}
+  .menu-card.full-width{grid-column:1}
+  .contact-row{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<!-- Rings -->
+<div class="ring" style="--d:8s;--del:0s"></div>
+<div class="ring" style="--d:8s;--del:2.7s"></div>
+<div class="ring" style="--d:8s;--del:5.3s"></div>
+
+<div class="wrap">
+
+  <!-- LOGO -->
+  <div class="logo-wrap">
+    <div class="logo-main">WNJ Studio</div>
+    <div class="logo-sub">Premium Digital Wedding Invitation</div>
+  </div>
+
+  <div class="div-orn"><div class="do-l"></div><div class="do-d"></div><div class="do-l"></div></div>
+
+  <div class="tagline">Where Every Love Story Becomes Art</div>
+  <div class="tagline-sub">Pilih halaman yang ingin Anda kunjungi</div>
+
+  <!-- MENU -->
+  <div class="menu-grid">
+
+    <!-- Website Utama -->
+    <div class="menu-card featured full-width" onclick="go('website-wnj-studio-v2.html')">
+      <div class="card-badge">Utama ✦</div>
+      <div class="card-icon">🌐</div>
+      <div class="card-title">Website WNJ Studio</div>
+      <div class="card-desc">Halaman utama — portfolio, demo undangan, harga paket, testimoni & pemesanan</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <!-- Demo Undangan -->
+    <div class="menu-card" onclick="go('digital-card-v2-rizky-amelia.html')">
+      <div class="card-icon">🖤</div>
+      <div class="card-title">Demo Dark Luxury</div>
+      <div class="card-desc">Lihat langsung undangan digital premium tema Dark Luxury</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <div class="menu-card" onclick="go('video-opening-cinematic-5-final.html')">
+      <div class="card-icon">🎬</div>
+      <div class="card-title">Cinematic Opening</div>
+      <div class="card-desc">Intro video cinematic 5 scene sebelum undangan terbuka</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <div class="menu-card" onclick="go('tema1-ivory-champagne.html')">
+      <div class="card-icon">🤍</div>
+      <div class="card-title">Ivory & Champagne</div>
+      <div class="card-desc">Tema soft elegant dengan kelopak bunga & nuansa hangat</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <div class="menu-card" onclick="go('tema2-sage-green.html')">
+      <div class="card-icon">🌿</div>
+      <div class="card-title">Sage Green & Gold</div>
+      <div class="card-desc">Tema botanical garden dengan daun jatuh & gold accent</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <div class="menu-card" onclick="go('tema3-royal-navy.html')">
+      <div class="card-icon">💙</div>
+      <div class="card-title">Royal Navy & Silver</div>
+      <div class="card-desc">Tema majestic dengan bintang berkedip & rasi bintang</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <div class="menu-card" onclick="go('tema4-blush-rose.html')">
+      <div class="card-icon">🌸</div>
+      <div class="card-title">Blush Rose & Gold</div>
+      <div class="card-desc">Tema romantic floral dengan kelopak mawar beterbangan</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <!-- Tools -->
+    <div class="menu-card" onclick="go('amplop-digital-angpao.html')">
+      <div class="card-icon">🧧</div>
+      <div class="card-title">Amplop Digital</div>
+      <div class="card-desc">Rekening bank, e-wallet & QR QRIS dalam satu halaman</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+    <div class="menu-card" onclick="go('kirim-undangan-wa.html')">
+      <div class="card-icon">💬</div>
+      <div class="card-title">Kirim Undangan WA</div>
+      <div class="card-desc">Tools blast undangan personal ke tamu via WhatsApp</div>
+      <div class="card-arrow">→</div>
+      <div class="shine"></div>
+    </div>
+
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- CONTACT -->
+  <div class="contact-row">
+    <a class="contact-btn wa" href="https://wa.me/6289630486382" target="_blank">
+      💬 &nbsp;0896-3048-6382
+    </a>
+    <a class="contact-btn" href="https://instagram.com/_wnjstudio_" target="_blank">
+      📸 &nbsp;@_wnjstudio_
+    </a>
+    <a class="contact-btn" href="https://lynk.id/wnjstudio" target="_blank">
+      🔗 &nbsp;lynk.id/wnjstudio
+    </a>
+    <a class="contact-btn" href="mailto:wnjstudiobywindy@gmail.com">
+      ✉️ &nbsp;Email Kami
+    </a>
+  </div>
+
+  <div class="footer-txt">© 2026 WNJ Studio · Premium Digital Wedding Invitation · Jakarta</div>
+
+</div>
+
+<script>
+// BG CANVAS
+const cv=document.getElementById('bgCanvas'),cx=cv.getContext('2d');
+function resCV(){cv.width=window.innerWidth;cv.height=window.innerHeight}
+resCV();window.addEventListener('resize',resCV);
+const pts=[];
+for(let i=0;i<140;i++){pts.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.3+0.2,tw:Math.random()*Math.PI*2,ts:0.008+Math.random()*0.018,vy:-(0.08+Math.random()*0.2),vx:(Math.random()-.5)*0.08})}
+(function drawBG(){
+  cx.fillStyle='#030507';cx.fillRect(0,0,cv.width,cv.height);
+  const g=cx.createRadialGradient(cv.width/2,cv.height/2,0,cv.width/2,cv.height/2,cv.width*.55);
+  g.addColorStop(0,'rgba(201,168,76,0.04)');g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    p.tw+=p.ts;p.y+=p.vy;p.x+=p.vx;
+    if(p.y<-5){p.y=cv.height+5;p.x=Math.random()*cv.width}
+    if(p.x<0)p.x=cv.width;if(p.x>cv.width)p.x=0;
+    cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    cx.fillStyle=`rgba(201,168,76,${0.05+0.2*Math.abs(Math.sin(p.tw))})`;cx.fill();
+  });
+  requestAnimationFrame(drawBG);
+})();
+
+// NAVIGATION
+function go(file){ window.location.href = file; }
+</script>
+</body>
+</html>

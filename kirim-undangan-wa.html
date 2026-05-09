@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirim Undangan — Rizky & Amelia</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500;600&family=Raleway:wght@100;200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#050709;
+  --navy:#080c10;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --gold-pale:#f5e4b0;
+  --cream:#f8f0e0;
+  --wa:#25D366;
+  --wa-dark:#128C7E;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--cream);font-family:'Cormorant Garamond',serif;overflow-x:hidden;min-height:100vh}
+
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5}
+
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+.watermark{position:fixed;bottom:16px;right:18px;z-index:100;text-align:right;pointer-events:none}
+.wm-logo{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;color:rgba(201,168,76,0.25);text-transform:uppercase}
+.wm-sub{font-size:7px;letter-spacing:0.2em;color:rgba(201,168,76,0.14);font-family:'Raleway',sans-serif}
+
+/* HERO */
+.hero{min-height:45vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px 40px;position:relative;z-index:2;text-align:center}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 65% 60% at 50% 50%,rgba(201,168,76,0.055) 0%,transparent 68%);pointer-events:none}
+.h-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.6em;color:rgba(201,168,76,0.42);text-transform:uppercase;margin-bottom:8px}
+.h-div{display:flex;align-items:center;gap:12px;width:240px;margin:8px auto}
+.h-dl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.38),transparent)}
+.h-dd{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);opacity:0.65;flex-shrink:0}
+.h-title{font-family:'Great Vibes',cursive;font-size:clamp(48px,13vw,80px);color:transparent;background:linear-gradient(160deg,#f5e4b0 0%,#e8c97a 25%,#c9a84c 55%,#e8c97a 80%,#9a7530 100%);-webkit-background-clip:text;background-clip:text;line-height:0.95;filter:drop-shadow(0 3px 16px rgba(201,168,76,0.22));margin:4px 0}
+.h-sub{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:rgba(245,228,176,0.4);letter-spacing:0.1em;margin-top:10px}
+
+.s-div{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.09) 30%,rgba(201,168,76,0.09) 70%,transparent)}
+
+.orn{display:flex;align-items:center;gap:14px;width:100%;max-width:260px;margin:8px auto}
+.orn-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.25),transparent)}
+.orn-cw{display:flex;align-items:center;gap:5px}
+.orn-dot{width:3px;height:3px;background:rgba(201,168,76,0.4);border-radius:50%}
+.orn-d{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);opacity:0.4}
+
+/* MAIN */
+.main{position:relative;z-index:2;padding:0 20px 80px;max-width:620px;margin:0 auto}
+
+/* LINK SETTINGS */
+.settings-card{border:1px solid rgba(201,168,76,0.12);background:linear-gradient(160deg,rgba(201,168,76,0.04) 0%,rgba(201,168,76,0.01) 100%);padding:28px 24px;position:relative;overflow:hidden;margin-bottom:20px}
+.settings-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.45),transparent)}
+.card-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;color:rgba(201,168,76,0.55);text-transform:uppercase;margin-bottom:18px}
+
+.f-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.f-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;color:rgba(201,168,76,0.38);text-transform:uppercase}
+.f-input,.f-select,.f-textarea{background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.15);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:15px;padding:12px 14px;outline:none;transition:border-color 0.3s;width:100%;font-style:italic}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:rgba(201,168,76,0.38)}
+.f-input::placeholder,.f-textarea::placeholder{color:rgba(245,228,176,0.2)}
+.f-select option{background:#0d1318}
+.f-textarea{resize:none;height:140px;line-height:1.7}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* KIRIM SECTION */
+.kirim-card{border:1px solid rgba(201,168,76,0.12);background:linear-gradient(160deg,rgba(201,168,76,0.04) 0%,rgba(201,168,76,0.01) 100%);padding:28px 24px;position:relative;overflow:hidden;margin-bottom:20px}
+.kirim-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(37,211,102,0.4),transparent)}
+
+/* Preview pesan */
+.preview-msg{background:rgba(37,211,102,0.04);border:1px solid rgba(37,211,102,0.15);border-radius:0;padding:16px;margin-bottom:20px;position:relative}
+.preview-msg::before{content:'PREVIEW PESAN';font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.28em;color:rgba(37,211,102,0.3);position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--black);padding:0 10px}
+.preview-text{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(245,228,176,0.5);line-height:1.8;white-space:pre-wrap;word-break:break-word}
+
+/* PHONE INPUT */
+.phone-row{display:flex;gap:8px;align-items:stretch;margin-bottom:16px}
+.phone-prefix{padding:12px 14px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);color:rgba(201,168,76,0.6);font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.1em;white-space:nowrap;flex-shrink:0}
+.phone-input{flex:1;background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.15);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:16px;padding:12px 14px;outline:none;transition:border-color 0.3s;min-width:0}
+.phone-input:focus{border-color:rgba(201,168,76,0.38)}
+.phone-input::placeholder{color:rgba(245,228,176,0.2);font-style:italic}
+
+/* WA BUTTON */
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 24px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;color:white;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.35em;text-transform:uppercase;cursor:pointer;transition:all 0.4s;width:100%;box-shadow:0 4px 20px rgba(37,211,102,0.2);position:relative;overflow:hidden;margin-bottom:10px}
+.wa-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);transform:translateX(-100%);transition:transform 0.5s}
+.wa-btn:hover::before{transform:translateX(100%)}
+.wa-btn:hover{box-shadow:0 6px 30px rgba(37,211,102,0.35);transform:translateY(-1px)}
+.wa-btn:active{transform:translateY(0)}
+.wa-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+.wa-icon{font-size:20px}
+
+/* TEMPLATE TOGGLE */
+.template-tabs{display:flex;gap:0;border:1px solid rgba(201,168,76,0.12);margin-bottom:16px;overflow:hidden;flex-wrap:wrap}
+.tmpl-btn{flex:1;min-width:80px;padding:10px 6px;background:transparent;border:none;border-right:1px solid rgba(201,168,76,0.1);color:rgba(245,228,176,0.35);font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s}
+.tmpl-btn:last-child{border-right:none}
+.tmpl-btn.active{background:rgba(201,168,76,0.07);color:var(--gold-light)}
+.tmpl-btn:hover:not(.active){background:rgba(201,168,76,0.03)}
+
+/* TAMU LIST */
+.list-card{border:1px solid rgba(201,168,76,0.12);background:rgba(201,168,76,0.02);padding:24px;margin-bottom:20px}
+.list-card-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;color:rgba(201,168,76,0.5);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.tamu-count{background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.2);padding:3px 10px;font-family:'Cinzel',serif;font-size:9px;color:var(--gold)}
+
+.tamu-list{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto}
+.tamu-list::-webkit-scrollbar{width:3px}
+.tamu-list::-webkit-scrollbar-track{background:rgba(201,168,76,0.04)}
+.tamu-list::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);border-radius:2px}
+
+.tamu-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(201,168,76,0.08);background:rgba(201,168,76,0.02);transition:border-color 0.3s}
+.tamu-item:hover{border-color:rgba(201,168,76,0.2)}
+.tamu-avatar{width:32px;height:32px;border-radius:50%;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;justify-content:center;font-family:'Great Vibes',cursive;font-size:16px;color:rgba(201,168,76,0.6);flex-shrink:0}
+.tamu-info{flex:1;min-width:0}
+.tamu-name{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tamu-phone{font-family:'Raleway',sans-serif;font-size:10px;font-weight:200;letter-spacing:0.1em;color:rgba(201,168,76,0.4)}
+.tamu-actions{display:flex;gap:6px;flex-shrink:0}
+.tamu-wa-btn{padding:6px 12px;background:linear-gradient(135deg,#25D366,#128C7E);border:none;color:white;font-size:11px;cursor:pointer;transition:all 0.3s;border-radius:0}
+.tamu-wa-btn:hover{box-shadow:0 2px 10px rgba(37,211,102,0.3)}
+.tamu-del-btn{padding:6px 10px;background:transparent;border:1px solid rgba(200,60,60,0.2);color:rgba(200,60,60,0.5);font-size:11px;cursor:pointer;transition:all 0.3s}
+.tamu-del-btn:hover{border-color:rgba(200,60,60,0.5);color:rgba(200,100,100,0.8)}
+
+.empty-list{text-align:center;padding:30px;font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(245,228,176,0.2)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat-box{border:1px solid rgba(201,168,76,0.1);background:rgba(201,168,76,0.02);padding:16px 12px;text-align:center;position:relative;overflow:hidden}
+.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35),transparent)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-style:italic;color:transparent;background:linear-gradient(160deg,#f5e4b0,#c9a84c);-webkit-background-clip:text;background-clip:text;line-height:1}
+.stat-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;color:rgba(201,168,76,0.35);text-transform:uppercase;margin-top:4px}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(13,19,24,0.95);border:1px solid rgba(201,168,76,0.25);color:#c9a84c;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;padding:12px 24px;opacity:0;transition:all 0.4s;z-index:9000;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:480px){.f-row{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(3,1fr)}.tmpl-btn{font-size:7px;padding:8px 4px}}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="watermark"><div class="wm-logo">WNJ Studio</div><div class="wm-sub">Premium Invitations</div></div>
+<div class="toast" id="toast"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="h-eyebrow">WNJ Studio · Tools Mempelai</div>
+  <div class="h-div"><div class="h-dl"></div><div class="h-dd"></div><div class="h-dl"></div></div>
+  <div class="h-title">Kirim Undangan</div>
+  <div class="h-div"><div class="h-dl"></div><div class="h-dd"></div><div class="h-dl"></div></div>
+  <div class="h-sub">Kirim undangan digital langsung ke WhatsApp tamu satu per satu</div>
+</section>
+
+<div class="s-div"></div>
+
+<!-- MAIN -->
+<div class="main" style="padding-top:50px">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-lbl">Total Tamu</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statSent" style="background:linear-gradient(160deg,#25D366,#128C7E);-webkit-background-clip:text;background-clip:text">0</div>
+      <div class="stat-lbl">Terkirim</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statPending" style="background:linear-gradient(160deg,#f5e4b0,#e8a030);-webkit-background-clip:text;background-clip:text">0</div>
+      <div class="stat-lbl">Belum Kirim</div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="settings-card">
+    <div class="card-title">⚙️ &nbsp;Pengaturan Undangan</div>
+
+    <div class="f-row">
+      <div class="f-field">
+        <label class="f-label">Nama Mempelai Pria</label>
+        <input class="f-input" id="namaPria" type="text" value="Rizky" oninput="updatePreview()">
+      </div>
+      <div class="f-field">
+        <label class="f-label">Nama Mempelai Wanita</label>
+        <input class="f-input" id="namaWanita" type="text" value="Amelia" oninput="updatePreview()">
+      </div>
+    </div>
+
+    <div class="f-field">
+      <label class="f-label">Link Undangan (setelah hosting)</label>
+      <input class="f-input" id="linkUndangan" type="url" placeholder="https://rizky-amelia-2026.netlify.app" oninput="updatePreview()">
+    </div>
+
+    <div class="f-row">
+      <div class="f-field">
+        <label class="f-label">Tanggal</label>
+        <input class="f-input" id="tanggal" type="text" value="Sabtu, 14 Maret 2026" oninput="updatePreview()">
+      </div>
+      <div class="f-field">
+        <label class="f-label">Lokasi</label>
+        <input class="f-input" id="lokasi" type="text" value="Hotel Mulia Senayan, Jakarta" oninput="updatePreview()">
+      </div>
+    </div>
+  </div>
+
+  <!-- KIRIM SECTION -->
+  <div class="kirim-card">
+    <div class="card-title">💬 &nbsp;Kirim ke Tamu</div>
+
+    <!-- Template selector -->
+    <div class="template-tabs">
+      <button class="tmpl-btn active" onclick="setTmpl(0,this)">Formal Islami</button>
+      <button class="tmpl-btn" onclick="setTmpl(1,this)">Santai</button>
+      <button class="tmpl-btn" onclick="setTmpl(2,this)">Singkat</button>
+      <button class="tmpl-btn" onclick="setTmpl(3,this)">Keluarga</button>
+    </div>
+
+    <!-- Preview pesan -->
+    <div class="preview-msg">
+      <div class="preview-text" id="previewText"></div>
+    </div>
+
+    <!-- Input nama tamu -->
+    <div class="f-field">
+      <label class="f-label">Nama Tamu</label>
+      <input class="f-input" id="namaTamu" type="text" placeholder="cth: Bapak Ahmad" oninput="updatePreview()" onkeydown="if(event.key==='Enter')kirimWA()">
+    </div>
+
+    <!-- Input nomor -->
+    <label class="f-label" style="display:block;margin-bottom:6px">Nomor WhatsApp Tamu</label>
+    <div class="phone-row">
+      <div class="phone-prefix">+62</div>
+      <input class="phone-input" id="nomorTamu" type="tel" placeholder="812 3456 7890" onkeydown="if(event.key==='Enter')kirimWA()">
+    </div>
+
+    <!-- Tombol kirim -->
+    <button class="wa-btn" id="kirimBtn" onclick="kirimWA()">
+      <span class="wa-icon">💬</span>
+      Kirim Undangan via WhatsApp
+    </button>
+
+    <!-- Tambah ke list -->
+    <button onclick="tambahTamu()" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(201,168,76,0.2);color:rgba(201,168,76,0.55);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">
+      + Simpan ke Daftar Tamu
+    </button>
+  </div>
+
+  <!-- DAFTAR TAMU -->
+  <div class="list-card">
+    <div class="list-card-title">
+      <span>📋 &nbsp;Daftar Tamu</span>
+      <span class="tamu-count" id="tamuCountBadge">0 tamu</span>
+    </div>
+
+    <div class="tamu-list" id="tamuList">
+      <div class="empty-list" id="emptyMsg">Belum ada tamu tersimpan.<br>Tambahkan tamu di atas.</div>
+    </div>
+
+    <!-- Kirim semua -->
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <button onclick="clearAll()" style="flex:1;padding:12px;background:transparent;border:1px solid rgba(200,60,60,0.2);color:rgba(200,80,80,0.5);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.3s">🗑 Hapus Semua</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="s-div"></div>
+
+<!-- CLOSING -->
+<div style="padding:60px 20px;text-align:center;position:relative;z-index:2">
+  <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.45em;color:rgba(201,168,76,0.18);text-transform:uppercase;line-height:2.4">
+    WNJ Studio<br>
+    <span style="font-size:7px;color:rgba(201,168,76,0.1)">Premium Invitations · 2026</span>
+  </div>
+</div>
+
+<script>
+// BG CANVAS
+const canvas=document.getElementById('bgCanvas'),ctx=canvas.getContext('2d');
+function resizeC(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeC();window.addEventListener('resize',resizeC);
+const stars=[];
+for(let i=0;i<100;i++){stars.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*1.2+0.2,tw:Math.random()*Math.PI*2,ts:0.01+Math.random()*0.02,vy:-(0.1+Math.random()*0.25)})}
+function drawBg(){
+  ctx.fillStyle='#050709';ctx.fillRect(0,0,canvas.width,canvas.height);
+  const g=ctx.createRadialGradient(canvas.width/2,canvas.height*.4,0,canvas.width/2,canvas.height*.4,canvas.width*.5);
+  g.addColorStop(0,'rgba(201,168,76,0.04)');g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{
+    s.tw+=s.ts;s.y+=s.vy;
+    if(s.y<-5){s.y=canvas.height+5;s.x=Math.random()*canvas.width}
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(201,168,76,${0.08+0.25*Math.abs(Math.sin(s.tw))})`;ctx.fill();
+  });
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// TEMPLATES
+const templates = [
+  // 0 Formal
+  (nama,pria,wanita,tgl,lok,link)=>`Assalamu'alaikum Warahmatullahi Wabarakatuh 🤍
+
+Kepada Yth.
+*${nama}*
+
+Dengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di pernikahan kami:
+
+💍 *${pria} & ${wanita}*
+📅 ${tgl}
+📍 ${lok}
+
+Silakan buka undangan digital kami di:
+🔗 ${link || '[Link Undangan]'}
+
+Kehadiran dan doa restu Anda adalah kebahagiaan terbesar bagi kami 🌸
+
+Wassalamu'alaikum Warahmatullahi Wabarakatuh`,
+
+  // 1 Santai
+  (nama,pria,wanita,tgl,lok,link)=>`Haii *${nama}*! 🌸
+
+Alhamdulillah kami mau berbagi kabar bahagia nih — kami akan menikah! 💍
+
+*${pria} & ${wanita}*
+📅 ${tgl}
+📍 ${lok}
+
+Yuk buka undangan digitalnya:
+🔗 ${link || '[Link Undangan]'}
+
+Kehadiran kamu bakal bikin hari itu makin berkesan banget buat kami 🥹💛`,
+
+  // 2 Singkat
+  (nama,pria,wanita,tgl,lok,link)=>`✨ *Undangan Pernikahan*
+
+Kepada *${nama}*
+
+*${pria} & ${wanita}*
+📅 ${tgl}
+📍 ${lok}
+
+🔗 ${link || '[Link Undangan]'}
+
+Kami mengharapkan kehadiran dan doa restu Anda 🤍`,
+
+  // 3 Keluarga
+  (nama,pria,wanita,tgl,lok,link)=>`Assalamu'alaikum Warahmatullahi Wabarakatuh 💛
+
+Kepada Yth.
+*${nama}*
+
+Dengan penuh sukacita, kami mengundang Bapak/Ibu/Saudara/i untuk hadir merayakan pernikahan kami:
+
+💍 *${pria} & ${wanita}*
+📅 ${tgl}
+⏰ Akad: 08.00 | Resepsi: 11.00 WIB
+📍 ${lok}
+
+Undangan lengkap:
+🔗 ${link || '[Link Undangan]'}
+
+Tanpa mengurangi rasa hormat, kami sangat mengharapkan kehadiran dan doa restu Bapak/Ibu/Saudara/i 🙏
+
+Wassalamu'alaikum Warahmatullahi Wabarakatuh`
+];
+
+let currentTmpl = 0;
+let tamuList = JSON.parse(localStorage.getItem('tamuList') || '[]');
+let sentList = JSON.parse(localStorage.getItem('sentList') || '[]');
+
+function getVars(){
+  return {
+    nama: document.getElementById('namaTamu').value.trim() || 'Bapak/Ibu',
+    pria: document.getElementById('namaPria').value.trim() || 'Rizky',
+    wanita: document.getElementById('namaWanita').value.trim() || 'Amelia',
+    tgl: document.getElementById('tanggal').value.trim(),
+    lok: document.getElementById('lokasi').value.trim(),
+    link: document.getElementById('linkUndangan').value.trim()
+  };
+}
+
+function getMsg(nama){
+  const v = getVars();
+  return templates[currentTmpl](nama||v.nama, v.pria, v.wanita, v.tgl, v.lok, v.link);
+}
+
+function updatePreview(){
+  document.getElementById('previewText').textContent = getMsg();
+  updateStats();
+}
+
+function setTmpl(idx, btn){
+  currentTmpl = idx;
+  document.querySelectorAll('.tmpl-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updatePreview();
+}
+
+function kirimWA(){
+  const nama = document.getElementById('namaTamu').value.trim() || 'Bapak/Ibu';
+  let nomor = document.getElementById('nomorTamu').value.trim().replace(/\D/g,'');
+
+  // Format nomor
+  if(nomor.startsWith('0')) nomor = '62' + nomor.slice(1);
+  else if(!nomor.startsWith('62')) nomor = '62' + nomor;
+
+  const msg = getMsg(nama);
+  const encoded = encodeURIComponent(msg);
+
+  // Buka WA langsung ke nomor tamu
+  window.open(`https://wa.me/${nomor}?text=${encoded}`, '_blank');
+
+  // Tandai sebagai terkirim
+  if(nomor.length > 10){
+    if(!sentList.includes(nomor)) sentList.push(nomor);
+    localStorage.setItem('sentList', JSON.stringify(sentList));
+    updateStats();
+    showToast(`✦ Undangan dikirim ke ${nama}!`);
+  }
+}
+
+function tambahTamu(){
+  const nama = document.getElementById('namaTamu').value.trim();
+  let nomor = document.getElementById('nomorTamu').value.trim().replace(/\D/g,'');
+  if(!nama){showToast('⚠ Isi nama tamu dulu!');return}
+  if(!nomor){showToast('⚠ Isi nomor tamu dulu!');return}
+  if(nomor.startsWith('0')) nomor = '62'+nomor.slice(1);
+  else if(!nomor.startsWith('62')) nomor = '62'+nomor;
+
+  // Cek duplikat
+  if(tamuList.find(t=>t.nomor===nomor)){showToast('⚠ Nomor sudah ada di daftar!');return}
+
+  tamuList.push({nama, nomor, id: Date.now()});
+  localStorage.setItem('tamuList', JSON.stringify(tamuList));
+
+  // Reset input
+  document.getElementById('namaTamu').value = '';
+  document.getElementById('nomorTamu').value = '';
+  updatePreview();
+
+  renderTamuList();
+  updateStats();
+  showToast(`✦ ${nama} ditambahkan ke daftar!`);
+}
+
+function kirimDariList(nomor, nama){
+  const msg = getMsg(nama);
+  const encoded = encodeURIComponent(msg);
+  window.open(`https://wa.me/${nomor}?text=${encoded}`, '_blank');
+  if(!sentList.includes(nomor)) sentList.push(nomor);
+  localStorage.setItem('sentList', JSON.stringify(sentList));
+  updateStats();
+  renderTamuList();
+  showToast(`✦ Undangan dikirim ke ${nama}!`);
+}
+
+function hapusTamu(id){
+  tamuList = tamuList.filter(t=>t.id!==id);
+  localStorage.setItem('tamuList', JSON.stringify(tamuList));
+  renderTamuList();
+  updateStats();
+}
+
+function clearAll(){
+  if(tamuList.length===0){showToast('⚠ Daftar sudah kosong!');return}
+  if(confirm('Hapus semua daftar tamu?')){
+    tamuList=[];sentList=[];
+    localStorage.setItem('tamuList','[]');
+    localStorage.setItem('sentList','[]');
+    renderTamuList();updateStats();
+    showToast('✦ Daftar tamu dihapus!');
+  }
+}
+
+function renderTamuList(){
+  const list = document.getElementById('tamuList');
+  const empty = document.getElementById('emptyMsg');
+  const badge = document.getElementById('tamuCountBadge');
+  badge.textContent = `${tamuList.length} tamu`;
+
+  if(tamuList.length===0){
+    empty.style.display='block';
+    // Remove items
+    list.querySelectorAll('.tamu-item').forEach(el=>el.remove());
+    return;
+  }
+  empty.style.display='none';
+  list.querySelectorAll('.tamu-item').forEach(el=>el.remove());
+
+  tamuList.forEach(t=>{
+    const isSent = sentList.includes(t.nomor);
+    const el = document.createElement('div');
+    el.className='tamu-item';
+    el.innerHTML=`
+      <div class="tamu-avatar">${t.nama.charAt(0)}</div>
+      <div class="tamu-info">
+        <div class="tamu-name">${t.nama} ${isSent?'<span style="font-size:10px;color:#25D366">✓ Terkirim</span>':''}</div>
+        <div class="tamu-phone">+${t.nomor}</div>
+      </div>
+      <div class="tamu-actions">
+        <button class="tamu-wa-btn" onclick="kirimDariList('${t.nomor}','${t.nama.replace(/'/g,"\\'")}')">💬</button>
+        <button class="tamu-del-btn" onclick="hapusTamu(${t.id})">✕</button>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function updateStats(){
+  const total = tamuList.length;
+  const sent = tamuList.filter(t=>sentList.includes(t.nomor)).length;
+  const pending = total - sent;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statSent').textContent = sent;
+  document.getElementById('statPending').textContent = pending;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+// INIT
+renderTamuList();
+updateStats();
+updatePreview();
+</script>
+</body>
+</html>

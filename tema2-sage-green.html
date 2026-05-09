@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rizky & Amelia — Sage Green & Gold</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --sage-pale:#eef2ec;
+  --sage-light:#d4dece;
+  --sage:#8fa882;
+  --sage-dark:#5a7050;
+  --sage-deep:#3d5238;
+  --gold:#b8982a;
+  --gold-light:#d4b84a;
+  --gold-pale:#eedfa0;
+  --text:#2c3828;
+  --text-soft:#5a6e52;
+  --text-pale:#8fa882;
+}
+html{scroll-behavior:smooth}
+body{background:var(--sage-pale);color:var(--text);font-family:'Cormorant Garamond',serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.5}
+
+.watermark{position:fixed;bottom:16px;right:18px;z-index:1000;text-align:right;pointer-events:none}
+.wm-logo{font-family:'Raleway',sans-serif;font-size:8px;font-weight:200;letter-spacing:0.4em;color:rgba(90,112,80,0.3);text-transform:uppercase}
+.wm-sub{font-size:7px;letter-spacing:0.2em;color:rgba(90,112,80,0.18);text-transform:uppercase;font-family:'Raleway',sans-serif}
+
+.music-player{position:fixed;top:18px;left:18px;z-index:1000;display:flex;align-items:center;gap:10px;background:rgba(238,242,236,0.93);border:1px solid rgba(143,168,130,0.3);padding:8px 14px 8px 10px;backdrop-filter:blur(12px);box-shadow:0 4px 20px rgba(60,82,56,0.08)}
+.music-btn{width:28px;height:28px;border:1px solid rgba(143,168,130,0.4);background:transparent;color:var(--sage-dark);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.3s;flex-shrink:0}
+.music-btn:hover{background:rgba(143,168,130,0.12)}
+.music-title{font-family:'Raleway',sans-serif;font-size:7.5px;letter-spacing:0.2em;color:rgba(90,112,80,0.6);text-transform:uppercase}
+.music-artist{font-family:'Cormorant Garamond',serif;font-size:10px;font-style:italic;color:var(--text-pale)}
+.eq{display:flex;align-items:flex-end;gap:2px;height:14px}
+.eq-bar{width:2px;background:var(--sage);opacity:0.6;border-radius:1px;animation:eq var(--s,.8s) ease-in-out var(--d,0s) infinite alternate;height:3px}
+.eq.paused .eq-bar{animation-play-state:paused}
+@keyframes eq{from{height:3px}to{height:13px}}
+
+/* ENVELOPE */
+#envelope-screen{position:fixed;inset:0;background:linear-gradient(135deg,#eef2ec 0%,#d4dece 100%);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;transition:opacity 1s ease,visibility 1s ease}
+#envelope-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.env-bg-sage{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 50% 50%,rgba(143,168,130,0.12) 0%,transparent 70%)}
+
+.envelope-s{position:relative;width:260px;height:175px;cursor:pointer;transition:transform 0.3s;z-index:2}
+.envelope-s:hover{transform:scale(1.03) translateY(-4px)}
+.env-body-s{position:absolute;inset:0;background:linear-gradient(160deg,#d8e4d2 0%,#c8dac0 60%,#d8e4d2 100%);border:1.5px solid rgba(143,168,130,0.5);border-radius:2px 2px 8px 8px;box-shadow:0 15px 50px rgba(60,82,56,0.15),inset 0 1px 0 rgba(255,255,255,0.5)}
+.env-flap-s{position:absolute;top:0;left:0;right:0;height:90px;overflow:hidden;transform-origin:top center;transition:transform 0.9s cubic-bezier(0.4,0,0.2,1);z-index:2}
+.env-fi-s{width:0;height:0;border-left:130px solid transparent;border-right:130px solid transparent;border-top:90px solid #c8dac0;position:relative;filter:drop-shadow(0 1px 3px rgba(60,82,56,0.12))}
+.env-fi-s::before{content:'';position:absolute;top:-90px;left:-130px;width:0;height:0;border-left:130px solid transparent;border-right:130px solid transparent;border-top:90px solid rgba(184,152,42,0.18)}
+.envelope-s.open .env-flap-s{transform:rotateX(180deg)}
+.env-diag-s{position:absolute;bottom:0;left:0;right:0;height:90px;z-index:1}
+.env-diag-s::before,.env-diag-s::after{content:'';position:absolute;bottom:0;width:50%;height:100%;border-top:1px solid rgba(143,168,130,0.25)}
+.env-diag-s::before{left:0;transform-origin:bottom left;transform:skewY(-31deg)}
+.env-diag-s::after{right:0;transform-origin:bottom right;transform:skewY(31deg)}
+.env-seal-s{position:absolute;top:50%;left:50%;transform:translate(-50%,-15%);width:54px;height:54px;background:radial-gradient(circle at 35% 30%,var(--sage-light) 0%,var(--sage) 50%,var(--sage-dark) 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 4px 15px rgba(60,82,56,0.25),inset 0 1px 2px rgba(255,255,255,0.3);border:1.5px solid rgba(255,255,255,0.4);cursor:pointer}
+.env-seal-text-s{font-family:'Great Vibes',cursive;font-size:18px;color:white;letter-spacing:-1px;text-shadow:0 1px 3px rgba(60,82,56,0.3)}
+.env-lbl-s{font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.5em;color:rgba(90,112,80,0.55);text-transform:uppercase;position:relative;z-index:2;animation:sp 2.5s ease-in-out infinite}
+@keyframes sp{0%,100%{opacity:.55}50%{opacity:1}}
+.env-hint-s{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(60,82,56,0.3);position:relative;z-index:2;animation:sp 3s ease-in-out .5s infinite}
+
+#main-content{opacity:0;transition:opacity 1.3s ease}
+#main-content.visible{opacity:1}
+
+/* LEAVES PARTICLES */
+.leaves{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+
+/* OPENING */
+.opening{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;position:relative;overflow:hidden;background:linear-gradient(180deg,#eef2ec 0%,#e2eadc 50%,#eef2ec 100%);text-align:center}
+
+/* SVG botanical background */
+.botanical-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0.12}
+
+.o-content{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:16px;animation:rUp 1.4s cubic-bezier(0.22,1,0.36,1) both}
+@keyframes rUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+.o-leaf-icon{font-size:28px;color:var(--sage);opacity:0.5;margin-bottom:4px}
+.o-eyebrow{font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.6em;color:var(--text-pale);text-transform:uppercase}
+.o-div{display:flex;align-items:center;gap:14px;width:min(280px,80vw);margin:4px 0}
+.o-dl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(184,152,42,0.4),transparent)}
+.o-dg{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);opacity:0.55;flex-shrink:0}
+.o-bismillah{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,6vw,36px);color:var(--sage-deep);font-weight:300;line-height:1.5}
+.o-bismillah-latin{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--text-soft);letter-spacing:0.1em;line-height:1.9;max-width:360px}
+.o-names{font-family:'Great Vibes',cursive;font-size:clamp(58px,15vw,90px);color:var(--sage-deep);line-height:0.95;filter:drop-shadow(0 2px 8px rgba(61,82,56,0.12))}
+.o-date{font-family:'Raleway',sans-serif;font-size:10px;font-weight:200;letter-spacing:0.38em;color:var(--text-soft);text-transform:uppercase;margin-top:8px}
+.o-body{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;font-style:italic;color:var(--text-soft);line-height:1.95;max-width:400px}
+.o-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.3;animation:bob 2.2s ease-in-out infinite;z-index:5}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+.o-sl{width:1px;height:36px;background:linear-gradient(180deg,var(--sage),transparent)}
+.o-st{font-family:'Raleway',sans-serif;font-size:7px;letter-spacing:0.3em;color:var(--sage-dark);text-transform:uppercase}
+
+/* DIVIDER */
+.s-div{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(143,168,130,0.25) 30%,rgba(143,168,130,0.25) 70%,transparent)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:60px 20px;background:linear-gradient(180deg,#e2eadc 0%,#d4dece 50%,#e2eadc 100%)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(143,168,130,0.08) 0%,transparent 65%)}
+
+/* Botanical corner decorations */
+.bot-corner{position:absolute;opacity:0.18;pointer-events:none}
+.bot-corner.tl{top:0;left:0;transform:rotate(0deg)}
+.bot-corner.tr{top:0;right:0;transform:rotate(90deg)}
+.bot-corner.bl{bottom:0;left:0;transform:rotate(270deg)}
+.bot-corner.br{bottom:0;right:0;transform:rotate(180deg)}
+
+.h-content{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:6px;animation:rUp 1.5s cubic-bezier(0.22,1,0.36,1) .3s both}
+.h-eyebrow{font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.6em;color:var(--text-pale);text-transform:uppercase;margin-bottom:6px}
+.h-div{display:flex;align-items:center;gap:12px;width:260px;margin:7px 0}
+.h-dl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(184,152,42,0.45),transparent)}
+.h-dg{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);opacity:0.55;flex-shrink:0}
+.h-name{font-family:'Great Vibes',cursive;font-size:clamp(66px,17vw,105px);line-height:0.9;color:var(--sage-deep);filter:drop-shadow(0 3px 10px rgba(61,82,56,0.15));text-align:center}
+.h-amp{font-family:'DM Serif Display',serif;font-size:28px;font-style:italic;color:rgba(90,112,80,0.5);letter-spacing:0.2em;margin:-8px 0}
+.h-date{font-family:'Raleway',sans-serif;font-size:10.5px;font-weight:200;letter-spacing:0.32em;color:var(--text-soft);text-transform:uppercase;margin-top:14px}
+.h-loc{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--text-pale);letter-spacing:0.1em}
+.cta{margin-top:30px;padding:12px 36px;background:transparent;border:1px solid rgba(143,168,130,0.5);color:var(--sage-deep);font-family:'Raleway',sans-serif;font-size:9px;font-weight:300;letter-spacing:0.42em;text-transform:uppercase;cursor:pointer;transition:all 0.4s;text-decoration:none;display:inline-block;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:rgba(143,168,130,0.08);transform:scaleX(0);transition:transform 0.4s}
+.cta:hover::before{transform:scaleX(1)}
+.cta:hover{border-color:var(--sage);color:var(--sage-deep);box-shadow:0 0 20px rgba(143,168,130,0.12)}
+
+/* PHOTO */
+.photo-wrap{padding:80px 20px 40px;max-width:620px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:32px}
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:520px;position:relative}
+.photo-card{aspect-ratio:3/4;border:1.5px solid rgba(143,168,130,0.3);overflow:hidden;background:linear-gradient(145deg,#d4dece,#c8d8c0);cursor:pointer;position:relative;transition:border-color 0.3s;box-shadow:0 8px 30px rgba(60,82,56,0.1)}
+.photo-card:hover{border-color:rgba(143,168,130,0.6)}
+.photo-card::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(61,82,56,0.4) 100%);z-index:2;pointer-events:none}
+.photo-preview{width:100%;height:100%;object-fit:cover;display:none}
+.photo-preview.loaded{display:block}
+.photo-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.photo-placeholder.hidden{opacity:0;pointer-events:none}
+.photo-ic{font-size:26px;color:rgba(90,112,80,0.3)}
+.photo-lbl{font-family:'Raleway',sans-serif;font-size:8px;letter-spacing:0.22em;color:rgba(90,112,80,0.35);text-transform:uppercase;text-align:center;padding:0 12px}
+.photo-init{font-family:'Great Vibes',cursive;font-size:52px;color:rgba(143,168,130,0.15);position:absolute}
+.photo-tag{position:absolute;bottom:14px;left:0;right:0;text-align:center;z-index:4;pointer-events:none}
+.photo-tag span{font-family:'Great Vibes',cursive;font-size:26px;color:rgba(255,255,255,0.85);text-shadow:0 1px 6px rgba(60,82,56,0.35)}
+.photo-input{display:none}
+.photo-and-c{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Great Vibes',cursive;font-size:42px;color:rgba(143,168,130,0.3);pointer-events:none;z-index:10}
+
+/* SECTION */
+.section{padding:80px 20px;max-width:660px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}
+.s-label{font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.55em;color:var(--text-pale);text-transform:uppercase}
+.s-title{font-family:'DM Serif Display',serif;font-size:clamp(24px,6vw,38px);font-style:italic;color:var(--text);text-align:center;line-height:1.2}
+.s-body{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;line-height:1.95;color:var(--text-soft);text-align:center;max-width:460px}
+.orn{display:flex;align-items:center;gap:14px;width:100%;max-width:280px;margin:10px 0}
+.orn-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(184,152,42,0.3),transparent)}
+.orn-cw{display:flex;align-items:center;gap:5px}
+.orn-dot{width:3px;height:3px;background:rgba(184,152,42,0.4);border-radius:50%}
+.orn-d{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);opacity:0.4}
+
+/* COUPLE */
+.couple-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;width:100%;max-width:540px;margin-top:16px}
+.couple-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 14px;border:1px solid rgba(143,168,130,0.2);background:rgba(255,255,255,0.35);box-shadow:0 4px 20px rgba(60,82,56,0.06)}
+.couple-av{width:78px;height:78px;border-radius:50%;border:1.5px solid rgba(143,168,130,0.35);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#d8e4d0,#c8d8bc)}
+.couple-init{font-family:'Great Vibes',cursive;font-size:34px;color:var(--sage-dark);opacity:0.65}
+.couple-nm{font-family:'Great Vibes',cursive;font-size:28px;color:var(--sage-deep)}
+.couple-desc{font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;color:var(--text-pale);text-align:center;line-height:1.6}
+.couple-and{font-family:'Great Vibes',cursive;font-size:50px;color:rgba(143,168,130,0.3);text-align:center}
+
+/* COUNTDOWN */
+.cd-sec{background:linear-gradient(180deg,transparent,rgba(143,168,130,0.05) 50%,transparent);border-top:1px solid rgba(143,168,130,0.12);border-bottom:1px solid rgba(143,168,130,0.12);width:100%;padding:70px 20px}
+.cd-wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:36px}
+.cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;max-width:460px}
+.cd-unit{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 8px;border:1px solid rgba(143,168,130,0.2);background:rgba(255,255,255,0.4);box-shadow:0 2px 12px rgba(60,82,56,0.06)}
+.cd-num{font-family:'DM Serif Display',serif;font-size:clamp(26px,6vw,40px);color:var(--sage-deep);line-height:1;font-style:italic}
+.cd-lbl{font-family:'Raleway',sans-serif;font-size:7.5px;font-weight:200;letter-spacing:0.28em;color:var(--text-pale);text-transform:uppercase}
+
+/* EVENTS */
+.ev-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:540px}
+.ev-card{padding:26px 18px;border:1px solid rgba(143,168,130,0.18);background:rgba(255,255,255,0.4);box-shadow:0 2px 16px rgba(60,82,56,0.06);position:relative;overflow:hidden;transition:box-shadow 0.3s}
+.ev-card:hover{box-shadow:0 6px 28px rgba(60,82,56,0.1)}
+.ev-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(143,168,130,0.6),transparent)}
+.ev-type{font-family:'Raleway',sans-serif;font-size:8px;font-weight:200;letter-spacing:0.38em;color:var(--text-pale);text-transform:uppercase;margin-bottom:10px}
+.ev-name{font-family:'DM Serif Display',serif;font-size:20px;font-style:italic;color:var(--text);margin-bottom:10px;line-height:1}
+.ev-time{font-family:'Raleway',sans-serif;font-size:10px;font-weight:300;color:var(--sage-dark);letter-spacing:0.1em;margin-bottom:5px}
+.ev-venue{font-family:'Cormorant Garamond',serif;font-size:12.5px;font-style:italic;color:var(--text-pale);line-height:1.5}
+.maps-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 28px;border:1px solid rgba(143,168,130,0.4);background:transparent;color:var(--sage-deep);font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.38em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all 0.3s;position:relative;overflow:hidden}
+.maps-btn::before{content:'';position:absolute;inset:0;background:rgba(143,168,130,0.08);transform:scaleX(0);transition:transform 0.3s}
+.maps-btn:hover::before{transform:scaleX(1)}
+.maps-btn:hover{border-color:var(--sage)}
+
+/* RSVP */
+.rsvp-sec{background:linear-gradient(180deg,transparent,rgba(143,168,130,0.05) 50%,transparent);border-top:1px solid rgba(143,168,130,0.1);width:100%;padding:80px 20px}
+.rsvp-wrap{max-width:460px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:22px}
+.rsvp-form{width:100%;display:flex;flex-direction:column;gap:13px}
+.f-field{display:flex;flex-direction:column;gap:6px}
+.f-label{font-family:'Raleway',sans-serif;font-size:8px;font-weight:200;letter-spacing:0.38em;color:var(--text-pale);text-transform:uppercase}
+.f-input,.f-select,.f-textarea{background:rgba(255,255,255,0.55);border:1px solid rgba(143,168,130,0.22);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:15px;padding:12px 14px;outline:none;transition:border-color 0.3s;width:100%;font-style:italic}
+.f-input:focus,.f-select:focus,.f-textarea:focus{border-color:rgba(143,168,130,0.5)}
+.f-input::placeholder,.f-textarea::placeholder{color:var(--text-pale)}
+.f-textarea{resize:none;height:78px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.sub-btn{padding:14px 36px;background:transparent;border:1px solid rgba(143,168,130,0.45);color:var(--sage-deep);font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.42em;text-transform:uppercase;cursor:pointer;transition:all 0.4s;align-self:center;margin-top:6px;position:relative;overflow:hidden}
+.sub-btn::before{content:'';position:absolute;inset:0;background:rgba(143,168,130,0.08);transform:scaleX(0);transition:transform 0.4s}
+.sub-btn:hover::before{transform:scaleX(1)}
+.sub-btn:hover{border-color:var(--sage);color:var(--sage-deep)}
+.rsvp-ok{display:none;flex-direction:column;align-items:center;gap:14px;padding:40px;border:1px solid rgba(143,168,130,0.2);text-align:center;background:rgba(255,255,255,0.4)}
+.rsvp-ok.show{display:flex}
+
+/* CLOSING */
+.closing{padding:100px 20px 90px;display:flex;flex-direction:column;align-items:center;gap:16px;position:relative;overflow:hidden;background:linear-gradient(180deg,#eef2ec,#d4dece)}
+.closing-names{font-family:'Great Vibes',cursive;font-size:clamp(40px,10vw,65px);color:var(--sage-deep);text-align:center;filter:drop-shadow(0 2px 8px rgba(61,82,56,0.12))}
+.closing-verse{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:var(--text-soft);text-align:center;max-width:380px;line-height:1.95}
+.closing-wm{font-family:'Raleway',sans-serif;font-size:8px;font-weight:200;letter-spacing:0.45em;color:rgba(90,112,80,0.22);text-transform:uppercase;margin-top:28px;text-align:center;line-height:2.2}
+
+@media(max-width:480px){.ev-grid,.couple-grid{grid-template-columns:1fr}.couple-and{display:none}.f-row{grid-template-columns:1fr}.cd-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="watermark"><div class="wm-logo">WNJ Studio</div><div class="wm-sub">Premium Invitations</div></div>
+
+<div class="music-player">
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶</button>
+  <div><div class="music-title">Can't Help Falling</div><div class="music-artist">Elvis Presley</div></div>
+  <div class="eq paused" id="eq">
+    <div class="eq-bar" style="--s:.6s;--d:0s"></div><div class="eq-bar" style="--s:.8s;--d:.15s"></div>
+    <div class="eq-bar" style="--s:.5s;--d:.3s"></div><div class="eq-bar" style="--s:.9s;--d:.05s"></div>
+    <div class="eq-bar" style="--s:.7s;--d:.22s"></div>
+  </div>
+</div>
+<audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg"></audio>
+
+<div class="leaves" id="leaves"></div>
+
+<div id="envelope-screen">
+  <div class="env-bg-sage"></div>
+  <div style="font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.5em;color:rgba(90,112,80,0.35);text-transform:uppercase;position:relative;z-index:2">WNJ Studio · Premium Invitations</div>
+  <div class="envelope-s" id="envelope" onclick="openEnvelope()">
+    <div class="env-body-s"></div>
+    <div class="env-flap-s"><div class="env-fi-s"></div></div>
+    <div class="env-diag-s"></div>
+    <div class="env-seal-s"><span class="env-seal-text-s">R&A</span></div>
+  </div>
+  <div class="env-lbl-s">Undangan Pernikahan</div>
+  <div class="env-hint-s">Ketuk amplop untuk membuka undangan</div>
+</div>
+
+<div id="main-content">
+
+  <section class="opening">
+    <!-- Botanical SVG bg -->
+    <svg class="botanical-bg" style="position:absolute;inset:0;width:100%;height:100%;opacity:.1" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 400 C50 200, 200 50, 400 50 C600 50, 750 200, 750 400 C750 600, 600 750, 400 750 C200 750, 50 600, 50 400Z" stroke="#5a7050" stroke-width="1" fill="none"/>
+      <path d="M100 400 C200 100, 600 100, 700 400" stroke="#5a7050" stroke-width="0.7" fill="none"/>
+      <path d="M100 400 C200 700, 600 700, 700 400" stroke="#5a7050" stroke-width="0.7" fill="none"/>
+      <path d="M400 50 C150 150, 100 350, 200 500 C300 650, 500 700, 650 600" stroke="#5a7050" stroke-width="0.8" fill="none"/>
+    </svg>
+
+    <div class="o-content">
+      <div class="o-leaf-icon">🌿 ✦ 🌿</div>
+      <div class="o-eyebrow">Dengan Menyebut Nama Allah</div>
+      <div class="o-div"><div class="o-dl"></div><div class="o-dg"></div><div class="o-dl"></div></div>
+      <div class="o-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+      <div class="o-bismillah-latin">Bismillāhir-raḥmānir-raḥīm<br>Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang</div>
+      <div class="o-div" style="margin-top:4px"><div class="o-dl"></div><div class="o-dg"></div><div class="o-dl"></div></div>
+      <div class="o-body">Assalamu'alaikum Warahmatullahi Wabarakatuh<br><br>Dengan penuh rasa syukur dan kebahagiaan, kami mengundang Bapak/Ibu/Saudara/i untuk hadir menyaksikan dan memberikan doa restu pada hari pernikahan kami.</div>
+      <div class="o-div"><div class="o-dl"></div><div class="o-dg"></div><div class="o-dl"></div></div>
+      <div class="o-names">Rizky & Amelia</div>
+      <div class="o-date">14 Maret 2026 · Jakarta</div>
+    </div>
+    <div class="o-scroll"><div class="o-st">Scroll</div><div class="o-sl"></div></div>
+  </section>
+
+  <div class="s-div"></div>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <!-- Botanical corner decorations -->
+    <svg class="bot-corner tl" width="160" height="160" viewBox="0 0 160 160" fill="none"><path d="M10 10 C10 80, 80 10, 150 10" stroke="#3d5238" stroke-width="1.5" fill="none"/><path d="M10 10 C10 60, 50 80, 10 150" stroke="#3d5238" stroke-width="1.5" fill="none"/><ellipse cx="40" cy="40" rx="20" ry="12" stroke="#3d5238" stroke-width="0.8" fill="rgba(61,82,56,0.05)" transform="rotate(-30,40,40)"/><ellipse cx="70" cy="25" rx="18" ry="10" stroke="#3d5238" stroke-width="0.8" fill="rgba(61,82,56,0.05)" transform="rotate(-60,70,25)"/></svg>
+    <svg class="bot-corner tr" width="160" height="160" viewBox="0 0 160 160" fill="none"><path d="M10 10 C10 80, 80 10, 150 10" stroke="#3d5238" stroke-width="1.5" fill="none"/><path d="M10 10 C10 60, 50 80, 10 150" stroke="#3d5238" stroke-width="1.5" fill="none"/><ellipse cx="40" cy="40" rx="20" ry="12" stroke="#3d5238" stroke-width="0.8" fill="rgba(61,82,56,0.05)" transform="rotate(-30,40,40)"/></svg>
+
+    <div class="h-content">
+      <div class="h-eyebrow">Undangan Pernikahan</div>
+      <div class="h-div"><div class="h-dl"></div><div class="h-dg"></div><div class="h-dl"></div></div>
+      <div class="h-name">Rizky</div>
+      <div class="h-amp">&amp;</div>
+      <div class="h-name">Amelia</div>
+      <div class="h-div" style="margin-top:14px"><div class="h-dl"></div><div class="h-dg"></div><div class="h-dl"></div></div>
+      <div class="h-date">Sabtu, 14 Maret 2026</div>
+      <div class="h-loc">The Grand Ballroom, Hotel Mulia Senayan · Jakarta</div>
+      <a href="#rsvp" class="cta">Konfirmasi Kehadiran</a>
+    </div>
+    <div class="o-scroll" style="bottom:30px"><div class="o-st">Scroll</div><div class="o-sl"></div></div>
+  </section>
+
+  <div class="s-div"></div>
+
+  <div class="photo-wrap">
+    <div class="s-label">Mempelai</div>
+    <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <div class="s-title" style="margin-bottom:4px">Foto Pasangan</div>
+    <div class="s-body" style="font-size:13px;color:var(--text-pale)">Ketuk foto untuk mengunggah gambar Anda</div>
+    <div class="photo-grid" style="max-width:520px;width:100%">
+      <div class="photo-card" onclick="document.getElementById('p1').click()">
+        <img class="photo-preview" id="pr1" alt="Rizky">
+        <div class="photo-placeholder" id="ph1"><div class="photo-init">R</div><div class="photo-ic">📷</div><div class="photo-lbl">Tap upload foto Rizky</div></div>
+        <div class="photo-tag"><span>Rizky</span></div>
+        <input type="file" class="photo-input" id="p1" accept="image/*" onchange="loadPic(this,'pr1','ph1')">
+      </div>
+      <div class="photo-card" onclick="document.getElementById('p2').click()">
+        <img class="photo-preview" id="pr2" alt="Amelia">
+        <div class="photo-placeholder" id="ph2"><div class="photo-init">A</div><div class="photo-ic">📷</div><div class="photo-lbl">Tap upload foto Amelia</div></div>
+        <div class="photo-tag"><span>Amelia</span></div>
+        <input type="file" class="photo-input" id="p2" accept="image/*" onchange="loadPic(this,'pr2','ph2')">
+      </div>
+      <div class="photo-and-c">&</div>
+    </div>
+  </div>
+
+  <div class="s-div"></div>
+
+  <section class="section">
+    <div class="s-label">Tentang Kami</div>
+    <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <div class="s-title">Dua Jiwa, Satu Ikatan</div>
+    <div class="couple-grid">
+      <div class="couple-card"><div class="couple-av"><span class="couple-init">R</span></div><div class="couple-nm">Rizky</div><div class="couple-desc">Putra dari<br>Bapak Ahmad & Ibu Sari</div></div>
+      <div class="couple-and">&</div>
+      <div class="couple-card"><div class="couple-av"><span class="couple-init">A</span></div><div class="couple-nm">Amelia</div><div class="couple-desc">Putri dari<br>Bapak Hendra & Ibu Dewi</div></div>
+    </div>
+    <div class="s-body" style="margin-top:18px">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya."</div>
+    <div style="font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.2em;color:var(--text-pale);margin-top:-4px">— QS. Ar-Rum: 21 —</div>
+  </section>
+
+  <div class="s-div"></div>
+
+  <div class="cd-sec">
+    <div class="cd-wrap">
+      <div class="s-label">Menghitung Hari</div>
+      <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+      <div class="s-title" style="margin-top:-6px">14 Maret 2026</div>
+      <div class="cd-grid">
+        <div class="cd-unit"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Hari</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Jam</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Menit</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Detik</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-div"></div>
+
+  <section class="section">
+    <div class="s-label">Rangkaian Acara</div>
+    <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <div class="s-title">Jadwal Acara</div>
+    <div class="ev-grid">
+      <div class="ev-card"><div class="ev-type">Akad Nikah</div><div class="ev-name">The Ceremony</div><div class="ev-time">08.00 — 10.00 WIB</div><div class="ev-venue">Masjid Al-Mulia<br>Hotel Mulia Senayan, Jakarta</div></div>
+      <div class="ev-card"><div class="ev-type">Resepsi</div><div class="ev-name">The Reception</div><div class="ev-time">11.00 — 14.00 WIB</div><div class="ev-venue">The Grand Ballroom<br>Hotel Mulia Senayan, Jakarta</div></div>
+    </div>
+    <div class="orn" style="margin-top:18px"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <a href="https://maps.google.com" target="_blank" class="maps-btn"><span>📍</span> Buka di Google Maps</a>
+  </section>
+
+  <div class="s-div"></div>
+
+  <div class="rsvp-sec" id="rsvp">
+    <div class="rsvp-wrap">
+      <div class="s-label">Konfirmasi Kehadiran</div>
+      <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+      <div class="s-title">RSVP</div>
+      <div class="s-body" style="font-size:14px;margin-top:-4px">Mohon konfirmasi sebelum <strong style="color:var(--sage-dark)">14 Februari 2026</strong></div>
+      <form class="rsvp-form" id="rsvpForm" onsubmit="doRSVP(event)">
+        <div class="f-field"><label class="f-label">Nama Lengkap</label><input class="f-input" type="text" placeholder="Masukkan nama Anda" required></div>
+        <div class="f-row">
+          <div class="f-field"><label class="f-label">Kehadiran</label><select class="f-select f-input" required><option value="">Pilih...</option><option>Hadir</option><option>Tidak Hadir</option></select></div>
+          <div class="f-field"><label class="f-label">Jumlah Tamu</label><select class="f-select f-input"><option>1 orang</option><option>2 orang</option><option>3 orang</option></select></div>
+        </div>
+        <div class="f-field"><label class="f-label">Ucapan & Doa</label><textarea class="f-textarea" placeholder="Tuliskan ucapan untuk mempelai..."></textarea></div>
+        <button type="submit" class="sub-btn">Kirim Konfirmasi</button>
+      </form>
+      <div class="rsvp-ok" id="rsvpOk">
+        <div style="font-size:26px">🌿</div>
+        <div class="s-title" style="font-size:22px">Terima Kasih!</div>
+        <div class="s-body" style="font-size:13px">Konfirmasi Anda telah kami terima.<br>Kami sangat menantikan kehadiran Anda.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-div"></div>
+
+  <section class="closing">
+    <div class="s-label">Dengan Penuh Cinta</div>
+    <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <div class="closing-names">Rizky &amp; Amelia</div>
+    <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <div class="closing-verse">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.<br><br>Wassalamu'alaikum Warahmatullahi Wabarakatuh</div>
+    <div style="margin-top:20px;font-size:24px;color:var(--sage);opacity:0.3">🌿 ✦ 🌿</div>
+    <div class="closing-wm">WNJ Studio<br><span style="font-size:7px;letter-spacing:0.2em;color:rgba(90,112,80,0.14)">Premium Invitations · 2026</span></div>
+  </section>
+
+</div>
+
+<script>
+// LEAVES
+const lEl=document.getElementById('leaves');
+const leafEmojis=['🍃','🌿','🍂'];
+for(let i=0;i<15;i++){
+  const l=document.createElement('div');
+  l.style.cssText=`position:absolute;font-size:${8+Math.random()*14}px;left:${Math.random()*100}%;animation:petalFall ${8+Math.random()*8}s ease-in ${Math.random()*14}s infinite;opacity:0;--dx:${(Math.random()-.5)*100}px`;
+  l.textContent=leafEmojis[Math.floor(Math.random()*3)];
+  l.style.cssText+=`;@keyframes petalFall{0%{opacity:0;transform:translateY(-20px) rotate(0deg)}10%{opacity:.3}90%{opacity:.1;transform:translateY(100vh) rotate(540deg) translateX(${(Math.random()-.5)*80}px)}100%{opacity:0}}`;
+  lEl.appendChild(l);
+}
+
+const audio=document.getElementById('bgMusic'),btn=document.getElementById('musicBtn'),eq=document.getElementById('eq');
+let playing=false;
+function toggleMusic(){if(playing){audio.pause();btn.textContent='▶';eq.classList.add('paused')}else{audio.play().catch(()=>{});btn.textContent='⏸';eq.classList.remove('paused')}playing=!playing}
+
+function openEnvelope(){
+  document.getElementById('envelope').classList.add('open');
+  setTimeout(()=>{
+    audio.play().then(()=>{playing=true;btn.textContent='⏸';eq.classList.remove('paused')}).catch(()=>{});
+    document.getElementById('envelope-screen').classList.add('hidden');
+    document.getElementById('main-content').classList.add('visible');
+  },950);
+}
+
+function loadPic(input,prvId,phId){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{const img=document.getElementById(prvId);img.src=e.target.result;img.classList.add('loaded');document.getElementById(phId).classList.add('hidden')};
+  r.readAsDataURL(f);
+}
+
+function tick(){
+  const diff=new Date('2026-03-14T08:00:00')-new Date();
+  if(diff<=0){['d','h','m','s'].forEach(k=>document.getElementById('cd-'+k).textContent='00');return}
+  document.getElementById('cd-d').textContent=String(Math.floor(diff/86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(Math.floor(diff%86400000/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(Math.floor(diff%3600000/60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(Math.floor(diff%60000/1000)).padStart(2,'0');
+}
+tick();setInterval(tick,1000);
+function doRSVP(e){e.preventDefault();document.getElementById('rsvpForm').style.display='none';document.getElementById('rsvpOk').classList.add('show')}
+</script>
+</body>
+</html>

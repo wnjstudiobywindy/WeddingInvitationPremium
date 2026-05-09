@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amplop Digital — Rizky & Amelia</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cinzel:wght@400;500;600&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#050709;
+  --navy:#080c10;
+  --dark:#0d1318;
+  --gold:#c9a84c;
+  --gold-light:#e8c97a;
+  --gold-pale:#f5e4b0;
+  --gold-dim:#8a6820;
+  --cream:#f8f0e0;
+  --red:#8b1a1a;
+  --red-mid:#a52020;
+  --red-light:#c43030;
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--cream);font-family:'Cormorant Garamond',serif;overflow-x:hidden;min-height:100vh}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.55}
+
+/* WATERMARK */
+.watermark{position:fixed;bottom:16px;right:18px;z-index:1000;text-align:right;pointer-events:none}
+.wm-logo{font-family:'Cinzel',serif;font-size:8px;font-weight:400;letter-spacing:0.4em;color:rgba(201,168,76,0.25);text-transform:uppercase}
+.wm-sub{font-size:7px;letter-spacing:0.2em;color:rgba(201,168,76,0.14);text-transform:uppercase;font-family:'Raleway',sans-serif}
+
+/* PARTICLES */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.particle{position:absolute;background:var(--gold);border-radius:50%;opacity:0;animation:pFloat var(--dur,8s) ease-in-out var(--del,0s) infinite}
+@keyframes pFloat{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:0.5;transform:translateY(80vh) translateX(var(--dx,20px)) scale(1)}90%{opacity:0.1;transform:translateY(5vh) translateX(var(--dx2,-10px)) scale(0.4)}100%{opacity:0;transform:translateY(0) scale(0)}}
+
+/* INTRO SCREEN */
+#intro-screen{position:fixed;inset:0;background:var(--black);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transition:opacity 1s ease,visibility 1s ease;overflow:hidden}
+#intro-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+
+.intro-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(201,168,76,0.07) 0%,transparent 70%)}
+
+/* BIG ANGPAO */
+.angpao-envelope{position:relative;width:220px;height:290px;cursor:pointer;z-index:2;animation:angpaoFloat 4s ease-in-out infinite}
+@keyframes angpaoFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-12px) rotate(1deg)}}
+
+.angpao-body{position:absolute;inset:0;background:linear-gradient(160deg,#9a2020 0%,#7a1010 40%,#600808 100%);border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 40px rgba(180,40,40,0.15),inset 0 1px 0 rgba(255,180,100,0.15)}
+
+/* Gold pattern overlay */
+.angpao-pattern{position:absolute;inset:0;border-radius:8px;overflow:hidden;opacity:0.12}
+.angpao-pattern::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(201,168,76,0.3) 0px,rgba(201,168,76,0.3) 1px,transparent 1px,transparent 12px),repeating-linear-gradient(-45deg,rgba(201,168,76,0.3) 0px,rgba(201,168,76,0.3) 1px,transparent 1px,transparent 12px)}
+
+/* Gold border on angpao */
+.angpao-border{position:absolute;inset:8px;border:1.5px solid rgba(201,168,76,0.4);border-radius:4px;pointer-events:none}
+.angpao-border::before{content:'';position:absolute;inset:4px;border:1px solid rgba(201,168,76,0.15);border-radius:2px}
+
+/* Top flap */
+.angpao-flap{position:absolute;top:0;left:0;right:0;height:100px;overflow:hidden;transform-origin:top center;transition:transform 1s cubic-bezier(0.4,0,0.2,1);z-index:3}
+.angpao-flap-inner{width:0;height:0;border-left:110px solid transparent;border-right:110px solid transparent;border-top:100px solid #6a0808;position:relative}
+.angpao-flap-inner::before{content:'';position:absolute;top:-100px;left:-110px;width:0;height:0;border-left:110px solid transparent;border-right:110px solid transparent;border-top:100px solid rgba(201,168,76,0.2)}
+.angpao-envelope.open .angpao-flap{transform:rotateX(180deg)}
+
+/* Gold seal */
+.angpao-seal{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;background:radial-gradient(circle at 35% 30%,#f5e4b0 0%,#c9a84c 45%,#8a6820 100%);border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:4;box-shadow:0 4px 20px rgba(0,0,0,0.5),0 0 20px rgba(201,168,76,0.25),inset 0 1px 3px rgba(255,255,255,0.3);border:2px solid rgba(255,255,255,0.2);cursor:pointer;transition:transform 0.3s}
+.angpao-seal:hover{transform:translate(-50%,-50%) scale(1.05)}
+.angpao-seal-text{font-family:'Great Vibes',cursive;font-size:22px;color:var(--red);font-weight:bold;letter-spacing:-1px}
+
+/* Bottom text */
+.angpao-bottom{position:absolute;bottom:20px;left:0;right:0;text-align:center;z-index:2}
+.angpao-wishes{font-family:'Great Vibes',cursive;font-size:20px;color:rgba(245,228,176,0.7)}
+.angpao-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-top:4px}
+
+/* Decorative top */
+.angpao-top-deco{position:absolute;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+.angpao-dot{width:8px;height:8px;background:var(--gold);border-radius:50%;opacity:0.5}
+.angpao-dot.big{width:12px;height:12px;opacity:0.7}
+
+.intro-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.45em;color:rgba(201,168,76,0.5);text-transform:uppercase;text-align:center;position:relative;z-index:2;animation:glow 2.5s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.5}50%{opacity:1}}
+.intro-hint{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(245,228,176,0.25);position:relative;z-index:2;animation:glow 3s ease-in-out .5s infinite}
+
+/* MAIN */
+#main-content{opacity:0;transition:opacity 1.3s ease;position:relative;z-index:2}
+#main-content.visible{opacity:1}
+
+/* HERO */
+.hero{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 24px 50px;position:relative;overflow:hidden;text-align:center}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(139,26,26,0.08) 0%,transparent 65%),linear-gradient(180deg,#050709 0%,#080c10 50%,#050709 100%)}
+.hero-content{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px;animation:rUp 1.5s cubic-bezier(0.22,1,0.36,1) .3s both}
+@keyframes rUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.h-eyebrow{font-family:'Cinzel',serif;font-size:9px;font-weight:400;letter-spacing:0.55em;color:rgba(201,168,76,0.45);text-transform:uppercase;margin-bottom:4px}
+.h-div{display:flex;align-items:center;gap:12px;width:240px;margin:6px 0}
+.h-dl{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.38),transparent)}
+.h-dd{width:5px;height:5px;background:var(--gold);transform:rotate(45deg);opacity:0.6;flex-shrink:0}
+.h-title{font-family:'Great Vibes',cursive;font-size:clamp(52px,14vw,82px);color:transparent;background:linear-gradient(160deg,#f5e4b0 0%,#e8c97a 25%,#c9a84c 55%,#e8c97a 80%,#9a7530 100%);-webkit-background-clip:text;background-clip:text;line-height:0.95;filter:drop-shadow(0 3px 14px rgba(201,168,76,0.2))}
+.h-names{font-family:'Cinzel',serif;font-size:11px;font-weight:500;letter-spacing:0.3em;color:rgba(201,168,76,0.6);text-transform:uppercase;margin-top:10px}
+.h-sub{font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(245,228,176,0.4);letter-spacing:0.1em}
+
+/* ANGPAO MINI decorative */
+.angpao-mini-row{display:flex;justify-content:center;gap:16px;margin:30px 0 10px;flex-wrap:wrap}
+.angpao-mini{width:60px;height:80px;background:linear-gradient(160deg,#9a2020,#600808);border-radius:4px;border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.4);cursor:pointer;transition:transform 0.3s;position:relative;overflow:hidden}
+.angpao-mini::before{content:'✦';font-size:20px;color:rgba(201,168,76,0.3)}
+.angpao-mini:hover{transform:translateY(-4px) rotate(2deg)}
+
+/* CARDS SECTION */
+.cards-section{padding:20px 20px 80px;max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:20px;position:relative;z-index:2}
+
+.section-title-block{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:10px;text-align:center}
+.st-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:rgba(201,168,76,0.42);text-transform:uppercase}
+.st-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,6vw,36px);font-weight:300;font-style:italic;color:var(--cream);line-height:1.2}
+.st-body{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:300;font-style:italic;color:rgba(245,228,176,0.45);line-height:1.8;max-width:420px}
+.orn{display:flex;align-items:center;gap:14px;width:100%;max-width:260px;margin:8px auto}
+.orn-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.28),transparent)}
+.orn-cw{display:flex;align-items:center;gap:5px}
+.orn-dot{width:3px;height:3px;background:rgba(201,168,76,0.4);border-radius:50%}
+.orn-d{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);opacity:0.4}
+
+/* PAYMENT TABS */
+.tabs{display:flex;gap:0;border:1px solid rgba(201,168,76,0.15);overflow:hidden}
+.tab-btn{flex:1;padding:12px 8px;background:transparent;border:none;color:rgba(245,228,176,0.4);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;border-right:1px solid rgba(201,168,76,0.1);position:relative}
+.tab-btn:last-child{border-right:none}
+.tab-btn.active{background:rgba(201,168,76,0.08);color:var(--gold-light)}
+.tab-btn.active::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.tab-btn:hover:not(.active){background:rgba(201,168,76,0.04);color:rgba(245,228,176,0.6)}
+
+/* TAB CONTENT */
+.tab-content{display:none;animation:fadeTab 0.4s ease}
+.tab-content.active{display:block}
+@keyframes fadeTab{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BANK CARD */
+.bank-card{background:linear-gradient(160deg,rgba(201,168,76,0.06) 0%,rgba(201,168,76,0.02) 100%);border:1px solid rgba(201,168,76,0.12);padding:28px 24px;position:relative;overflow:hidden;margin-top:2px}
+.bank-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),transparent)}
+
+.bank-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.bank-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bca{background:linear-gradient(135deg,#003087,#0041a8)}
+.bni{background:linear-gradient(135deg,#f47920,#e06010)}
+.bri{background:linear-gradient(135deg,#003087,#0041a8)}
+.mandiri{background:linear-gradient(135deg,#003087,#FFD700)}
+.bank-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;letter-spacing:0.15em;color:var(--gold-light)}
+.bank-type{font-family:'Raleway',sans-serif;font-size:9px;font-weight:200;letter-spacing:0.2em;color:rgba(201,168,76,0.4);text-transform:uppercase;margin-top:2px}
+
+.account-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid rgba(201,168,76,0.08)}
+.account-row:last-of-type{border-bottom:none}
+.acc-left{display:flex;flex-direction:column;gap:3px}
+.acc-label{font-family:'Raleway',sans-serif;font-size:8px;font-weight:200;letter-spacing:0.25em;color:rgba(201,168,76,0.38);text-transform:uppercase}
+.acc-value{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);letter-spacing:0.08em}
+.acc-name{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(245,228,176,0.5)}
+.copy-btn{padding:7px 16px;background:transparent;border:1px solid rgba(201,168,76,0.25);color:rgba(201,168,76,0.6);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;cursor:pointer;transition:all 0.3s;white-space:nowrap;flex-shrink:0}
+.copy-btn:hover{border-color:rgba(201,168,76,0.6);color:var(--gold);background:rgba(201,168,76,0.05)}
+.copy-btn.copied{border-color:rgba(100,200,100,0.5);color:rgba(100,200,100,0.8)}
+
+/* BANK SELECTOR */
+.bank-selector{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.bank-sel-btn{padding:8px 16px;background:transparent;border:1px solid rgba(201,168,76,0.15);color:rgba(245,228,176,0.4);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;cursor:pointer;transition:all 0.3s;text-transform:uppercase}
+.bank-sel-btn.active{border-color:rgba(201,168,76,0.5);color:var(--gold);background:rgba(201,168,76,0.06)}
+
+/* EWALLET GRID */
+.ewallet-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:2px}
+.ewallet-card{background:rgba(201,168,76,0.03);border:1px solid rgba(201,168,76,0.1);padding:20px 16px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.3s}
+.ewallet-card:hover{border-color:rgba(201,168,76,0.28);background:rgba(201,168,76,0.06)}
+.ewallet-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35),transparent)}
+.ew-header{display:flex;align-items:center;gap:10px}
+.ew-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.gopay{background:linear-gradient(135deg,#00AA5B,#008a48)}
+.ovo{background:linear-gradient(135deg,#4c3494,#6a42cc)}
+.dana{background:linear-gradient(135deg,#118EEA,#0068c8)}
+.shopeepay{background:linear-gradient(135deg,#EE4D2D,#cc3a1e)}
+.ew-name{font-family:'Cinzel',serif;font-size:11px;font-weight:500;letter-spacing:0.1em;color:var(--gold-light)}
+.ew-number{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--cream);letter-spacing:0.06em}
+.ew-holder{font-family:'Cormorant Garamond',serif;font-size:11px;font-style:italic;color:rgba(245,228,176,0.4)}
+.ew-copy{align-self:flex-end;padding:6px 14px;background:transparent;border:1px solid rgba(201,168,76,0.2);color:rgba(201,168,76,0.5);font-family:'Cinzel',serif;font-size:7.5px;letter-spacing:0.18em;cursor:pointer;transition:all 0.3s}
+.ew-copy:hover{border-color:rgba(201,168,76,0.5);color:var(--gold)}
+.ew-copy.copied{border-color:rgba(100,200,100,0.4);color:rgba(100,200,100,0.7)}
+
+/* QR TAB */
+.qr-section{padding:24px;display:flex;flex-direction:column;align-items:center;gap:20px;margin-top:2px;border:1px solid rgba(201,168,76,0.1);background:rgba(201,168,76,0.02)}
+.qr-box{width:180px;height:180px;background:white;border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 20px rgba(0,0,0,0.4);overflow:hidden}
+.qr-box canvas{display:block}
+.qr-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;color:rgba(201,168,76,0.45);text-transform:uppercase;text-align:center}
+.qr-note{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(245,228,176,0.35);text-align:center;line-height:1.7;max-width:320px}
+
+/* WISH SECTION */
+.wish-section{background:linear-gradient(180deg,transparent,rgba(139,26,26,0.04) 50%,transparent);border-top:1px solid rgba(201,168,76,0.07);border-bottom:1px solid rgba(201,168,76,0.07);padding:70px 20px;position:relative;z-index:2}
+.wish-wrap{max-width:500px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:22px}
+.wish-form{width:100%;display:flex;flex-direction:column;gap:13px}
+.f-field{display:flex;flex-direction:column;gap:6px}
+.f-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.38em;color:rgba(201,168,76,0.38);text-transform:uppercase}
+.f-input,.f-textarea,.f-select{background:rgba(201,168,76,0.025);border:1px solid rgba(201,168,76,0.12);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:15px;padding:12px 14px;outline:none;transition:border-color 0.3s;width:100%;font-style:italic}
+.f-input:focus,.f-textarea:focus,.f-select:focus{border-color:rgba(201,168,76,0.35)}
+.f-input::placeholder,.f-textarea::placeholder{color:rgba(245,228,176,0.18)}
+.f-textarea{resize:none;height:90px}
+.f-select option{background:#0d1318}
+.wish-submit{padding:14px 40px;background:linear-gradient(135deg,rgba(139,26,26,0.3),rgba(100,8,8,0.4));border:1px solid rgba(201,168,76,0.35);color:var(--gold);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.42em;text-transform:uppercase;cursor:pointer;transition:all 0.4s;align-self:center;margin-top:4px;position:relative;overflow:hidden}
+.wish-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.1),transparent);transform:translateX(-100%);transition:transform 0.5s}
+.wish-submit:hover::before{transform:translateX(100%)}
+.wish-submit:hover{border-color:var(--gold);box-shadow:0 0 25px rgba(139,26,26,0.2)}
+.wish-ok{display:none;flex-direction:column;align-items:center;gap:14px;padding:40px;border:1px solid rgba(201,168,76,0.15);text-align:center;background:rgba(139,26,26,0.06)}
+.wish-ok.show{display:flex}
+
+/* CLOSING */
+.closing{padding:80px 20px 90px;display:flex;flex-direction:column;align-items:center;gap:16px;position:relative;overflow:hidden;z-index:2}
+.closing-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 75% at 50% 50%,rgba(201,168,76,0.04) 0%,transparent 68%)}
+.closing-angpao{font-size:60px;animation:angpaoFloat 3s ease-in-out infinite;position:relative;z-index:2}
+.closing-names{font-family:'Great Vibes',cursive;font-size:clamp(38px,10vw,62px);color:transparent;background:linear-gradient(160deg,#f5e4b0 0%,#c9a84c 50%,#9a7530 100%);-webkit-background-clip:text;background-clip:text;text-align:center;position:relative;z-index:2;filter:drop-shadow(0 2px 10px rgba(201,168,76,0.18))}
+.closing-verse{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:rgba(245,228,176,0.38);text-align:center;max-width:380px;line-height:1.95;position:relative;z-index:2}
+.closing-wm{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.45em;color:rgba(201,168,76,0.18);text-transform:uppercase;margin-top:28px;text-align:center;line-height:2.2;position:relative;z-index:2}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(13,19,24,0.95);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;padding:12px 24px;opacity:0;transition:all 0.4s;z-index:9000;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.s-div{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.09) 30%,rgba(201,168,76,0.09) 70%,transparent)}
+
+@media(max-width:480px){.ewallet-grid{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.tab-btn{font-size:7px;padding:10px 4px}}
+</style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div class="particles" id="particles"></div>
+
+<!-- WATERMARK -->
+<div class="watermark"><div class="wm-logo">WNJ Studio</div><div class="wm-sub">Premium Invitations</div></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✦ Disalin ke clipboard!</div>
+
+<!-- INTRO SCREEN -->
+<div id="intro-screen">
+  <div class="intro-bg"></div>
+
+  <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.5em;color:rgba(201,168,76,0.3);text-transform:uppercase;position:relative;z-index:2">WNJ Studio · Premium Invitations</div>
+
+  <div class="angpao-envelope" id="angpao" onclick="openAngpao()">
+    <div class="angpao-body"></div>
+    <div class="angpao-pattern"></div>
+    <div class="angpao-border"></div>
+
+    <!-- Top decoration dots -->
+    <div class="angpao-top-deco">
+      <div class="angpao-dot"></div>
+      <div class="angpao-dot big"></div>
+      <div class="angpao-dot"></div>
+      <div class="angpao-dot big"></div>
+      <div class="angpao-dot"></div>
+    </div>
+
+    <div class="angpao-flap">
+      <div class="angpao-flap-inner"></div>
+    </div>
+
+    <div class="angpao-seal">
+      <span class="angpao-seal-text">R&A</span>
+    </div>
+
+    <div class="angpao-bottom">
+      <div class="angpao-wishes">Selamat Menempuh Hidup Baru</div>
+      <div class="angpao-sub">Rizky & Amelia · 2026</div>
+    </div>
+  </div>
+
+  <div class="intro-label">Amplop Digital</div>
+  <div class="intro-hint">Ketuk amplop untuk memberikan hadiah</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="h-eyebrow">Amplop Digital</div>
+      <div class="h-div"><div class="h-dl"></div><div class="h-dd"></div><div class="h-dl"></div></div>
+      <div class="h-title">Hadiah & Doa</div>
+      <div class="h-div"><div class="h-dl"></div><div class="h-dd"></div><div class="h-dl"></div></div>
+      <div class="h-names">Rizky & Amelia</div>
+      <div class="h-sub">Sabtu, 14 Maret 2026 · Jakarta</div>
+    </div>
+
+    <!-- Mini angpao decorations -->
+    <div class="angpao-mini-row" style="position:relative;z-index:3">
+      <div class="angpao-mini" style="transform:rotate(-8deg)"></div>
+      <div class="angpao-mini" style="transform:rotate(3deg);margin-top:-8px"></div>
+      <div class="angpao-mini" style="transform:rotate(10deg)"></div>
+    </div>
+  </section>
+
+  <div class="s-div"></div>
+
+  <!-- CARDS SECTION -->
+  <div class="cards-section">
+
+    <div class="section-title-block">
+      <div class="st-label">Berikan Hadiah</div>
+      <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+      <div class="st-title">Kirim Hadiah Terbaik</div>
+      <div class="st-body">Doa dan hadiah Anda adalah kebahagiaan terbesar bagi kami. Pilih metode pengiriman yang paling nyaman untuk Anda.</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('bank',this)">🏦 Transfer Bank</button>
+      <button class="tab-btn" onclick="switchTab('ewallet',this)">📱 E-Wallet</button>
+      <button class="tab-btn" onclick="switchTab('qr',this)">⬛ QR Code</button>
+    </div>
+
+    <!-- BANK TAB -->
+    <div class="tab-content active" id="tab-bank">
+      <!-- Bank selector -->
+      <div class="bank-selector" style="margin-top:16px">
+        <button class="bank-sel-btn active" onclick="showBank('bca',this)">BCA</button>
+        <button class="bank-sel-btn" onclick="showBank('bni',this)">BNI</button>
+        <button class="bank-sel-btn" onclick="showBank('mandiri',this)">Mandiri</button>
+      </div>
+
+      <!-- BCA -->
+      <div class="bank-card" id="bank-bca">
+        <div class="bank-logo-row">
+          <div class="bank-icon bca">🏦</div>
+          <div><div class="bank-name">Bank BCA</div><div class="bank-type">Tabungan</div></div>
+        </div>
+        <div class="account-row">
+          <div class="acc-left">
+            <div class="acc-label">Nomor Rekening</div>
+            <div class="acc-value" id="bca-num">1234 5678 90</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('1234567890',this)">Salin</button>
+        </div>
+        <div class="account-row">
+          <div class="acc-left">
+            <div class="acc-label">Atas Nama</div>
+            <div class="acc-name">Rizky Pratama</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BNI -->
+      <div class="bank-card" id="bank-bni" style="display:none">
+        <div class="bank-logo-row">
+          <div class="bank-icon bni">🏦</div>
+          <div><div class="bank-name">Bank BNI</div><div class="bank-type">Tabungan</div></div>
+        </div>
+        <div class="account-row">
+          <div class="acc-left">
+            <div class="acc-label">Nomor Rekening</div>
+            <div class="acc-value">0987 6543 21</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('0987654321',this)">Salin</button>
+        </div>
+        <div class="account-row">
+          <div class="acc-left">
+            <div class="acc-label">Atas Nama</div>
+            <div class="acc-name">Rizky Pratama</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANDIRI -->
+      <div class="bank-card" id="bank-mandiri" style="display:none">
+        <div class="bank-logo-row">
+          <div class="bank-icon mandiri">🏦</div>
+          <div><div class="bank-name">Bank Mandiri</div><div class="bank-type">Tabungan</div></div>
+        </div>
+        <div class="account-row">
+          <div class="acc-left">
+            <div class="acc-label">Nomor Rekening</div>
+            <div class="acc-value">1122 3344 5566</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('112233445566',this)">Salin</button>
+        </div>
+        <div class="account-row">
+          <div class="acc-left">
+            <div class="acc-label">Atas Nama</div>
+            <div class="acc-name">Amelia Putri</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EWALLET TAB -->
+    <div class="tab-content" id="tab-ewallet">
+      <div class="ewallet-grid" style="margin-top:16px">
+
+        <div class="ewallet-card">
+          <div class="ew-header">
+            <div class="ew-icon gopay">💚</div>
+            <div><div class="ew-name">GoPay</div></div>
+          </div>
+          <div><div class="ew-number">0812 3456 7890</div><div class="ew-holder">Rizky Pratama</div></div>
+          <button class="ew-copy" onclick="copyText('081234567890',this)">Salin Nomor</button>
+        </div>
+
+        <div class="ewallet-card">
+          <div class="ew-header">
+            <div class="ew-icon ovo">💜</div>
+            <div><div class="ew-name">OVO</div></div>
+          </div>
+          <div><div class="ew-number">0812 3456 7890</div><div class="ew-holder">Rizky Pratama</div></div>
+          <button class="ew-copy" onclick="copyText('081234567890',this)">Salin Nomor</button>
+        </div>
+
+        <div class="ewallet-card">
+          <div class="ew-header">
+            <div class="ew-icon dana">💙</div>
+            <div><div class="ew-name">DANA</div></div>
+          </div>
+          <div><div class="ew-number">0812 3456 7890</div><div class="ew-holder">Amelia Putri</div></div>
+          <button class="ew-copy" onclick="copyText('081234567890',this)">Salin Nomor</button>
+        </div>
+
+        <div class="ewallet-card">
+          <div class="ew-header">
+            <div class="ew-icon shopeepay">🧡</div>
+            <div><div class="ew-name">ShopeePay</div></div>
+          </div>
+          <div><div class="ew-number">0812 3456 7890</div><div class="ew-holder">Amelia Putri</div></div>
+          <button class="ew-copy" onclick="copyText('081234567890',this)">Salin Nomor</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QR TAB -->
+    <div class="tab-content" id="tab-qr">
+      <div class="qr-section">
+        <div class="qr-label">Scan QR Code</div>
+        <div class="qr-box">
+          <!-- QR Code generated via canvas -->
+          <canvas id="qrCanvas" width="160" height="160"></canvas>
+        </div>
+        <div class="qr-label">QRIS · Semua E-Wallet & Bank</div>
+        <div class="qr-note">Scan menggunakan aplikasi e-wallet atau mobile banking apapun. Pembayaran langsung diterima oleh mempelai.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s-div"></div>
+
+  <!-- WISH SECTION -->
+  <div class="wish-section">
+    <div class="wish-wrap">
+      <div class="section-title-block">
+        <div class="st-label">Ucapan & Doa</div>
+        <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+        <div class="st-title">Titipkan Doa Terbaik</div>
+        <div class="st-body" style="margin-top:-4px">Ucapan dan doa Anda adalah hadiah yang paling berharga bagi kami</div>
+      </div>
+
+      <form class="wish-form" id="wishForm" onsubmit="submitWish(event)">
+        <div class="f-field">
+          <label class="f-label">Nama Anda</label>
+          <input class="f-input" type="text" placeholder="Masukkan nama Anda" required>
+        </div>
+        <div class="f-field">
+          <label class="f-label">Hubungan</label>
+          <select class="f-select f-input">
+            <option value="">Pilih...</option>
+            <option>Keluarga Mempelai Pria</option>
+            <option>Keluarga Mempelai Wanita</option>
+            <option>Sahabat</option>
+            <option>Rekan Kerja</option>
+            <option>Lainnya</option>
+          </select>
+        </div>
+        <div class="f-field">
+          <label class="f-label">Ucapan & Doa</label>
+          <textarea class="f-textarea" placeholder="Tuliskan ucapan dan doa terbaik untuk mempelai..." required></textarea>
+        </div>
+        <button type="submit" class="wish-submit">Kirim Ucapan 💌</button>
+      </form>
+
+      <div class="wish-ok" id="wishOk">
+        <div style="font-size:36px">🎁</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-style:italic;color:var(--cream)">Terima Kasih!</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:14px;font-style:italic;color:rgba(245,228,176,0.45);text-align:center;line-height:1.8">Ucapan dan doa Anda telah kami terima.<br>Semoga Allah SWT membalas kebaikan Anda.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s-div"></div>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <div class="closing-bg"></div>
+    <div class="closing-angpao">🧧</div>
+    <div class="st-label" style="position:relative;z-index:2">Dari Kami Berdua</div>
+    <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <div class="closing-names">Rizky &amp; Amelia</div>
+    <div class="orn"><div class="orn-l"></div><div class="orn-cw"><div class="orn-dot"></div><div class="orn-d"></div><div class="orn-dot"></div></div><div class="orn-l"></div></div>
+    <div class="closing-verse">Terima kasih telah memberikan doa, hadiah, dan kehadiran Anda yang sangat berarti bagi kami.<br><br>Semoga Allah SWT senantiasa melimpahkan keberkahan kepada Anda dan keluarga.</div>
+    <div class="closing-wm">WNJ Studio<br><span style="font-size:7px;letter-spacing:0.2em;color:rgba(201,168,76,0.1)">Premium Invitations · 2026</span></div>
+  </section>
+
+</div>
+
+<script>
+// PARTICLES
+const pEl = document.getElementById('particles');
+for(let i=0;i<20;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  p.style.cssText=`left:${Math.random()*100}%;--dur:${6+Math.random()*9}s;--del:${Math.random()*12}s;--dx:${(Math.random()-.5)*70}px;--dx2:${(Math.random()-.5)*45}px;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px`;
+  pEl.appendChild(p);
+}
+
+// OPEN ANGPAO
+function openAngpao(){
+  document.getElementById('angpao').classList.add('open');
+  setTimeout(()=>{
+    document.getElementById('intro-screen').classList.add('hidden');
+    document.getElementById('main-content').classList.add('visible');
+    generateQR();
+  },950);
+}
+
+// TABS
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// BANK SELECTOR
+function showBank(bank, btn){
+  document.querySelectorAll('[id^="bank-"]').forEach(b=>b.style.display='none');
+  document.querySelectorAll('.bank-sel-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('bank-'+bank).style.display='block';
+  btn.classList.add('active');
+}
+
+// COPY
+function copyText(text, btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig = btn.textContent;
+    btn.textContent = '✓ Tersalin';
+    btn.classList.add('copied');
+    showToast();
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied')},2000);
+  }).catch(()=>{
+    // fallback
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    const orig=btn.textContent;btn.textContent='✓ Tersalin';btn.classList.add('copied');showToast();
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied')},2000);
+  });
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// GENERATE SIMPLE QR PATTERN (decorative)
+function generateQR(){
+  const canvas = document.getElementById('qrCanvas');
+  const ctx = canvas.getContext('2d');
+  const size = 160;
+  const mod = 25;
+  const cell = size/mod;
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0,0,size,size);
+
+  // Create a simple QR-like pattern
+  const pattern = [];
+  for(let i=0;i<mod;i++){
+    pattern[i]=[];
+    for(let j=0;j<mod;j++){
+      pattern[i][j] = Math.random() > 0.5 ? 1 : 0;
+    }
+  }
+
+  // Force finder patterns (3 corners)
+  const fp = [[0,0],[0,mod-7],[mod-7,0]];
+  fp.forEach(([r,c])=>{
+    for(let i=0;i<7;i++) for(let j=0;j<7;j++){
+      pattern[r+i][c+j] = (i===0||i===6||j===0||j===6||(i>=2&&i<=4&&j>=2&&j<=4)) ? 1 : 0;
+    }
+  });
+
+  ctx.fillStyle = '#1a0808';
+  for(let i=0;i<mod;i++){
+    for(let j=0;j<mod;j++){
+      if(pattern[i][j]){
+        ctx.fillRect(j*cell+1, i*cell+1, cell-1, cell-1);
+      }
+    }
+  }
+}
+
+// WISH SUBMIT
+function submitWish(e){
+  e.preventDefault();
+  document.getElementById('wishForm').style.display='none';
+  document.getElementById('wishOk').classList.add('show');
+}
+</script>
+</body>
+</html>
